@@ -1,13 +1,35 @@
 name: Aprendiendo GitHub Actions
 run-name: ¡Estoy aprendiendo GitHub Actions!
-on: [push]
+
+on: 
+  push: # El evento que dispara el workflow
+    branches:
+      - main # Solo se ejecuta cuando se hace push a la rama main
+
 jobs:
   hola-mundo:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      # Checkout del código
+      - name: Checkout del código
         uses: actions/checkout@v3
-      - name: Definir variable
+
+      # Instalar Python en el entorno
+      - name: Configurar Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.x" # Instala la última versión de Python 3.x
+
+      # Definir una variable de entorno
+      - name: Definir variable de entorno
         run: echo "USERNAME=${{ github.actor }}" >> $GITHUB_ENV
-      - name: Correr script
+
+      # Instalar dependencias (opcional)
+      - name: Instalar dependencias
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      # Ejecutar el script Python
+      - name: Correr script Python
         run: python hola_mundo.py
